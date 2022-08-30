@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: JSDoc Crash Course Example</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">JSDoc Crash Course Example</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Preview</h1>
+<p>JSDoc 기본 개념과 사용법을 익히며 정리한 레포입니다.</p>
+<hr/>
+<h1>Definition: What is JSDoc?</h1>
+<p><strong>JSDoc</strong>은 JavaScript 코드를 **문서화(Document)**하기 위해 만들어진 툴입니다.
+더불어 TypeScript 등장 이전 JavaScript 코드에 <strong>타입(type)을 부여</strong>하는 역할을 했습니다.</p>
+<h1>Set Up</h1>
+<h2>1. Set Up VSCode</h2>
+<ol>
+<li>Global Setting</li>
+</ol>
+<ul>
+<li>setting.json에서 다음 설정을 추가한다.</li>
+<li><code>&quot;js/ts.implicitProjectConfig.checkJs&quot;: true</code></li>
+</ul>
+<ol start="2">
+<li>Local Setting</li>
+</ol>
+<ul>
+<li>type check 하고 싶을 파일 상단에 <code>@ts-check</code> 를 추가한다.</li>
+</ul>
+<h2>2. Install json files</h2>
+<ol>
+<li>package.json 파일</li>
+</ol>
+<ul>
+<li>how: <code>npm init -y</code></li>
+</ul>
+<ol start="2">
+<li>jsdoc 설치</li>
+</ol>
+<ul>
+<li>how: <code>npm i -D jsdoc</code></li>
+</ul>
+<h2>3. Set Up json files</h2>
+<ol>
+<li>package.json 설정: jsdoc 실행 명령어 추가</li>
+</ol>
+<pre class="prettyprint source"><code>  {
+    &quot;name&quot;: &quot;jsdoc-sample-dahye1013&quot;,
+    &quot;author&quot;: &quot;dahye&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;description&quot;: &quot;&quot;,
+    &quot;main&quot;: &quot;index.js&quot;,
+    &quot;scripts&quot;: {
+      &quot;docs&quot;: &quot;jsdoc -c jsdoc.json&quot; //jsdoc config 파일 기준으로 생성
+    },
+    &quot;keywords&quot;: [],
+    &quot;license&quot;: &quot;ISC&quot;,
+    &quot;devDependencies&quot;: {
+      &quot;jsdoc&quot;: &quot;^3.6.10&quot;
+    },
+    &quot;type&quot;: &quot;module&quot;
+  }
+</code></pre>
+<ol start="2">
+<li>jsdoc.json 설정</li>
+</ol>
+<ul>
+<li>how: manually</li>
+<li>where: package.json 파일과 같은 라인</li>
+<li>what: 자세한 설정은 아래 코드 참조
+(1) 공식 웹사이트에서 제공하는 기본 세팅
+&lt;&amp;rarr&gt; <a href="https://jsdoc.app/about-configuring-jsdoc.html">공식 웹사이트</a> 보러가기<pre class="prettyprint source"><code>{
+  &quot;plugins&quot;: [],
+  &quot;recurseDepth&quot;: 10,
+  &quot;source&quot;: {
+    &quot;includePattern&quot;: &quot;.+\\.js(doc|x)?$&quot;,
+    &quot;excludePattern&quot;: &quot;(^|\\/|\\\\)_&quot;
+  },
+  &quot;sourceType&quot;: &quot;module&quot;,
+  &quot;tags&quot;: {
+    &quot;allowUnknownTags&quot;: true,
+    &quot;dictionaries&quot;: [&quot;jsdoc&quot;, &quot;closure&quot;]
+  },
+  &quot;templates&quot;: {
+    &quot;cleverLinks&quot;: false,
+    &quot;monospaceLinks&quot;: false
+  }
+}
+</code></pre>
+(2) 이 레포에서 사용한 세팅
+&lt;&amp;rarr&gt; <a href="https://www.youtube.com/watch?v=YK-GurROGIg&list=PLb8ihMFBGResk6_ybBhbwsXX5ymmecPKh&index=22">강의(2:29)</a> 보러가기<pre class="prettyprint source"><code>{
+  &quot;source&quot;: {
+    &quot;include&quot;: [&quot;src/&quot;],
+    &quot;includePattern&quot;: &quot;.js$&quot;,
+    &quot;excludePattern&quot;: &quot;(node_modules/|docs)_&quot;
+  },
+  &quot;plugins&quot;: [&quot;plugins/markdown&quot;],
+  &quot;templates&quot;: {
+    &quot;cleverLinks&quot;: false,
+    &quot;monospaceLinks&quot;: false
+  },
+  &quot;opts&quot;: {
+    &quot;encoding&quot;: &quot;utf8&quot;,
+    &quot;recurse&quot;: true,
+    &quot;destination&quot;: &quot;./docs/&quot;
+  }
+}
+</code></pre>
+</li>
+</ul>
+<hr/>
+<h1>Types</h1>
+<p>As mentioned above, the purpose of the JSDoc is to document JavaScript code and <strong>to provide types</strong> to it.</p>
+<p><strong>Types</strong> are roughly categorized <strong>by scopes</strong>:</p>
+<ol>
+<li>
+<p><strong>Global Scope</strong></p>
+</li>
+<li>
+<p><strong>Class</strong></p>
+</li>
+<li>
+<p><strong>Module</strong></p>
+</li>
+</ol>
+<p>The belows are the lumpy sortition of types the JSDoc provides:</p>
+<h2>Global</h2>
+<p><code>index.js</code> 에 설정한 변수 또는 함수는 global scope 에서 실행됩니다.</p>
+<ol>
+<li>Variables(변수):</li>
+</ol>
+<pre class="prettyprint source"><code>/**
+* description
+* @types {변수 타입 - ex.number}
+*/
+</code></pre>
+<pre class="prettyprint source"><code>//예시1
+/**
+ * Student Name
+ * @type {string}
+ */
+
+const studentName = &quot;Jay Lee&quot;;
+
+//예시2
+/**
+ * Array of grades
+ * @type {Array&lt;number>}
+ */
+const grades = [98, 97.7, 76, 89];
+
+</code></pre>
+<ol start="2">
+<li>Function(함수):</li>
+</ol>
+<pre class="prettyprint source"><code>/**
+* description of the function
+* @param {인자1 타입} 인자1이름 - description of the param
+* @param {인자2 타입} 인자2이름 - description of the param ... / 인자 수 만큼 타입 주기
+* @return {반환값 타입} -description / 없을 시 {void}
+*/
+</code></pre>
+<h2>Class</h2>
+<ol>
+<li>Variables(변수):</li>
+</ol>
+<pre class="prettyprint source"><code>/**
+ * Class Example
+ * @param {Object} personInfo - Information about the person
+ */
+class Person {
+  constructor(personInfo) {
+    /**
+     * @property {string} name Person's name
+     */
+    this.name = personInfo.name;
+    /**
+     * @property {string} age Person's age
+     */
+    this.age = personInfo.age;
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Method(매서드):</li>
+</ol>
+<pre class="prettyprint source"><code>//코드 생략...
+class Person {
+  //코드 생략...
+  /**
+   * @property {Function} greet A greeting with the name and age
+   * @returns void
+   */
+  greet() {
+    console.log(`Hello, my name is ${this.name} and I am ${this.age}`);
+  }
+}
+</code></pre>
+<p>아래와 같이 여러 인자를 한 번에 추가할 수도 있습니다.</p>
+<pre class="prettyprint source"><code>class Person {
+  /**
+   * @param {{ name: any; age: any; }} personInfo
+   */
+  constructor(personInfo) {
+    /**
+    ...코드 생략
+</code></pre>
+<ol start="3">
+<li>인스턴스 생성 예제</li>
+</ol>
+<pre class="prettyprint source"><code>/**
+ * Person one
+ * See <a href="Person.html">Person</a>
+ */
+const person1 = new Person({
+  name: &quot;Jay Lee&quot;,
+  age: 104,
+});
+</code></pre>
+<h2>Modules</h2>
+<ul>
+<li>
+<p>How:
+<code>모듈명.js</code> 생성
+-&gt; 상단에 아래 추가</p>
+<pre class="prettyprint source"><code>/**
+* 모듈 설명
+* @module 모듈명
+*/
+</code></pre>
+<p>-&gt; 변수/함수 생성: global scope 에서 다뤘던 것과 같다.</p>
+<pre class="prettyprint source"><code>//예제
+/**
+* Add two numbers
+* @param {number} n1 - first number
+* @param {number} n2 - second number
+* @returns  {number} - sum of n1 and n2
+*/
+export const add = (n1, n2) => n1 + n2;
+</code></pre>
+<p>-&gt; <code>export</code>/<code>import</code>: 방법은 기존 ES6/node.js 와 같다.</p>
+<pre class="prettyprint source"><code>import {add} from &quot;./calculate.js&quot;;
+</code></pre>
+</li>
+</ul>
+<h1>Etc</h1>
+<h2>template 커스터마이징하기</h2>
+<ul>
+<li>
+<p>node_modules 안의 기본 template 설정 파일을 복사하여 내 방식대로 커스텀해 보자. (내 방식대로 홈페이지 화면(view) 꾸미기)</p>
+</li>
+<li>
+<p>how:
+<code>node_modules</code> -&gt; <code>jsoc</code> -&gt; <code>templates</code> -&gt; <code>default</code> 폴더 통째로 복사
+-&gt; root 에 <code>default</code> 폴더 통째로 붙이기(&amp; 폴더명 원한다면 수정) -&gt; root 의 <code>jsdoc.json</code>파일 열기 -&gt; 아래와 같이 template 속성 추가 -&gt; 마지막으로 폴더 안의 <code>public.js</code> 에서 원하는대로 화면 수정</p>
+</li>
+</ul>
+<pre class="prettyprint source"><code>
+// jsdoc.json
+{
+&quot;source&quot;: {
+&quot;include&quot;: [&quot;src/&quot;],
+&quot;includePattern&quot;: &quot;.js$&quot;,
+&quot;excludePattern&quot;: &quot;(node*modules/|docs)*&quot;
+},
+&quot;plugins&quot;: [&quot;plugins/markdown&quot;],
+&quot;templates&quot;: {
+&quot;cleverLinks&quot;: false,
+&quot;monospaceLinks&quot;: false
+},
+&quot;opts&quot;: {
+&quot;encoding&quot;: &quot;utf8&quot;,
+&quot;recurse&quot;: true,
+&quot;destination&quot;: &quot;./docs/&quot;,
+&quot;template&quot;: &quot;내 커스텀 템플릿 폴더명&quot; //template 프로퍼티 추가
+}
+}
+
+</code></pre>
+<ul>
+<li><strong>주의!</strong> node_modules 안의 폴더는 대부분의 경우 절대 건드리지 않아야 한다.</li>
+</ul>
+<h2>또다른 Scope 제작하기 (feat. tutorial 페이지 제작)</h2>
+<ul>
+<li>
+<ol>
+<li><code>tutorials</code> 폴더 생성: root 에 또다른 scope 이 될 폴더 추가를 추가해 보자.</li>
+</ol>
+<p>예시로 프로그램을 어떻게 사용하면 좋을지 <code>tutorial</code> 페이지를 작성해 보자. 사용자의 편의성을 위해 이러한 <code>tutorial</code> 페이지는 만들어 주는 것이 좋다.</p>
+</li>
+<li>
+<ol start="2">
+<li><code>jsdoc.json</code> 설정 변경:</li>
+</ol>
+<p>잊지 말자. root 에 또다른 <code>폴더</code>을 추가할 때는 항상 root 의 <code>jsdoc.json</code>의 <code>opts</code>에 추가해 줘야 한다.</p>
+<pre class="prettyprint source"><code>// jsdoc.json
+//코드 생략
+ &quot;opts&quot;: {
+  &quot;encoding&quot;: &quot;utf8&quot;,
+  &quot;recurse&quot;: true,
+  &quot;destination&quot;: &quot;./docs/&quot;,
+  &quot;template&quot;: &quot;./custom-template&quot;,
+  &quot;tutorials&quot;: &quot;./tutorials&quot;      //tutorial 폴더  추가
+}
+}
+</code></pre>
+</li>
+<li>
+<ol start="3">
+<li>파일 생성: <code>~.js</code> 또는 <code>~.md</code> 등, 원하는 목차대로 파일 생성</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li><code>~.json</code> 생성: 새로운 scope 안에는 새로운 설정이 존재해야 한다. 새로 만든 <code>tutorials</code> 폴더 안에 <code>tutorials.jso</code> 을 추가해 보자.</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>다른 페이지에서 새로운 폴더 링크 걸기</li>
+</ol>
+</li>
+</ul>
+<pre class="prettyprint source"><code>// 예시
+/**
+ * Calculator module - See <a href="tutorial-calculator-tutorial.html">Calculator Tutorial</a>
+ * @module calculator
+ */
+
+</code></pre>
+<h2>document 꾸미기</h2>
+<p>다양한 Block tags 을 이용해 페이지의 얼굴이 될 index.js 를 꾸며보자.
+&lt;&amp;rarr&gt; <a href="https://jsdoc.app/index.html">더 다양한 Block Tags 보러가기</a></p>
+<pre class="prettyprint source"><code>//index.js
+
+/**
+ * @file index.js is the root file of this example app.
+ * @author jlee0505 (Hyeonjeong Lee)
+ * @see &lt;a href=&quot;https://github.com/jlee0505/study-jsdoc&quot;> Check more detail on her GitHub&lt;/a>
+ */
+</code></pre>
+<hr/>
+<h1>Reference</h1>
+<p><a href="https://jsdoc.app/">JSDoc 공식 웹사이트</a></p>
+<p><a href="https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html">TS Handbook - JSDoc Reference</a></p>
+<p><a href="https://www.youtube.com/watch?v=YK-GurROGIg">Documenting Your JavaScript | JSDoc Crash Course</a></p>
+<p><a href="https://github.com/dahye1013/crash-jsdoc-custom-template"> dahye1013
+/ crash-jsdoc-custom-template </a></p></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>index.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>index.js is the root file of this example app.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>jlee0505 (Hyeonjeong Lee)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/jlee0505/study-jsdoc"> Check more detail on her GitHub</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Hyeonjeong Lee</a></h2><h3>Modules</h3><ul><li><a href="module-calculator.html">calculator</a></li></ul><h3>Classes</h3><ul><li><a href="Person.html">Person</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-calculator-tutorial.html">Calculator Tutorial</a></li><li><a href="tutorial-program-tutorial.html">Program Tutorial</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calculate">calculate</a></li><li><a href="global.html#grades">grades</a></li><li><a href="global.html#person1">person1</a></li><li><a href="global.html#student">student</a></li><li><a href="global.html#studentName">studentName</a></li><li><a href="global.html#todo">todo</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Aug 30 2022 17:49:53 GMT+0900 (대한민국 표준시)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

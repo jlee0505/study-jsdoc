@@ -1,0 +1,20 @@
+{
+  "source": {
+    "include": ["src/"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)_"
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "recurse": true,
+    "destination": "./docs/",
+    "template": "./custom-template",
+    "tutorials": "./tutorials",
+    "readme": "./readme.md"
+  }
+}
